@@ -156,15 +156,20 @@ log_osdep_do (const char *fname,
   va_start(args, fmt);
   if (__LIKELY(cmsg_str != NULL)) {
     int cmsg_ln__ = 
+
+//pc2005
+//TODO this branch failed to link???
+/*
 #ifdef MTCFG_TSF_TIMER_TIMESTAMPS_IN_DEBUG_PRINTOUTS
       mtlk_snprintf(cmsg_str, MAX_CLOG_LEN,
       "[%010u|%010u] mtlk%s(%s:%d): ",
       jiffies_to_msecs(jiffies), get_hw_time_stamp(), level, fname, line_no);
 #else
+*/
       mtlk_snprintf(cmsg_str, MAX_CLOG_LEN,
       "[%010u] mtlk%s(%s:%d): ",
       jiffies_to_msecs(jiffies), level, fname, line_no);
-#endif /* MTCFG_TSF_TIMER_TIMESTAMPS_IN_DEBUG_PRINTOUTS */
+//#endif /* MTCFG_TSF_TIMER_TIMESTAMPS_IN_DEBUG_PRINTOUTS */
     mtlk_vsnprintf(cmsg_str + cmsg_ln__, MAX_CLOG_LEN - cmsg_ln__,
                   fmt, args);
     printk("%s\n", cmsg_str);
