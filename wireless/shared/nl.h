@@ -38,13 +38,29 @@ enum {
 #define NL_DRV_CMD_RCVRY_STARTED  6
 #define NL_DRV_CMD_RCVRY_CONFIG   7
 
+#if 0 //pc2005 from 5.3 MTCFG_LINUX_BACKPORT
 #define NETLINK_MESSAGE_GROUP           (1L << 0)/* the group that drvhlpr, hostapd and wpa_supplicant join */
+#else
+#define NETLINK_MESSAGE_GROUP           (0L << 0)/* the group that drvhlpr, hostapd and wpa_supplicant join */
+#endif
 /* TODO: change NETLINK_SIMPLE_CONFIG_GROUP to group that WPS application will listen
  * it should not match any other active group 
  */
+ 
+//pc2005 from 5.3
+#if 0 
 #define NETLINK_SIMPLE_CONFIG_GROUP     (1L << 0) /* the group that wsccmd application (Simple Config) joins */ 
 #define NETLINK_IRBM_GROUP              (1L << 1) /* the group that IRB clients join */
 #define NETLINK_LOGSERVER_GROUP         (1L << 2) /* the group that logserver joins */
+#else
+#define MTLK_NETLINK_SIMPLE_CONFIG_GROUP_NAME "mtlk_config"
+#define MTLK_NETLINK_IRBM_GROUP_NAME          "mtlk_irb"
+#define MTLK_NETLINK_LOGSERVER_GROUP_NAME     "mtlk_logserver"
+
+#define NETLINK_SIMPLE_CONFIG_GROUP     (0L << 0) /* the group that wsccmd application (Simple Config) joins */
+#define NETLINK_IRBM_GROUP              (1L << 0) /* the group that IRB clients join */
+#define NETLINK_LOGSERVER_GROUP         (2L << 0) /* the group that logserver joins */
+#endif
 
 struct mtlk_nl_msghdr {
   char fingerprint[4]; // "mtlk"

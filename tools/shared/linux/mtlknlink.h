@@ -24,7 +24,7 @@ typedef void (*mtlk_netlink_callback_t)(void* ctx, void* data);
 typedef struct _mtlk_nlink_socket_t
 {
   int family;
-  struct nl_handle *sock;
+  struct nl_sock *sock;
   mtlk_netlink_callback_t receive_callback;
   void* receive_callback_ctx;
 } mtlk_nlink_socket_t;
@@ -49,9 +49,15 @@ typedef struct _mtlk_nlink_socket_t
 
 #endif /* MTCFG_USE_GENL */
 
+#if 1	//pc2005 from 5.3 defined(MTCFG_USE_GENL) && defined(MTCFG_LINUX_BACKPORT)
+int __MTLK_IFUNC
+mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, const char* group_name,
+                  mtlk_netlink_callback_t receive_callback, void* callback_ctx);
+#else
 int __MTLK_IFUNC
 mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
                   mtlk_netlink_callback_t receive_callback, void* callback_ctx);
+#endif
 
 int __MTLK_IFUNC
 mtlk_nlink_receive_loop(mtlk_nlink_socket_t* nlink_socket, int stop_fd);

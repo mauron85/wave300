@@ -40,7 +40,8 @@ struct sock *bt_acs_nl_sock = NULL;
 DEFINE_MUTEX(bt_acs_nl_mutex);
 static void bt_acs_nl_input (struct sk_buff *inskb) {}
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)
-static void bt_acs_nl_bind (int group) {}
+//static void bt_acs_nl_bind (int group) {}
+static int bt_acs_nl_bind (struct net *net, int group) { return 0;}
 #endif
 
 #ifdef MTCFG_USE_GENL
@@ -48,17 +49,28 @@ static void bt_acs_nl_bind (int group) {}
 /* Module parameter */
 extern int mtlk_genl_family_id;
 
+static struct genl_multicast_group mtlk_mcgrps[] = {
+  [NETLINK_SIMPLE_CONFIG_GROUP] = { .name = MTLK_NETLINK_SIMPLE_CONFIG_GROUP_NAME, },
+  [NETLINK_IRBM_GROUP] = { .name = MTLK_NETLINK_IRBM_GROUP_NAME, },
+  [NETLINK_LOGSERVER_GROUP] = { .name = MTLK_NETLINK_LOGSERVER_GROUP_NAME, },
+};
+
 /* family structure */
 static struct genl_family mtlk_genl_family = {
-        .id = GENL_ID_GENERATE,
+//pc2005 GENL_ID_GENERATE removed
+//        .id = GENL_ID_GENERATE,
+        .id = 0,
         .name = MTLK_GENL_FAMILY_NAME,
         .version = MTLK_GENL_FAMILY_VERSION,
         .maxattr = MTLK_GENL_ATTR_MAX,
+
+        .mcgrps = mtlk_mcgrps,
+        .n_mcgrps = ARRAY_SIZE(mtlk_mcgrps),
 };
 
 #else /* MTCFG_USE_GENL */
 
-struct sock *nl_sock;
+struct sock *nl_sock = NULL;
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,22)
 DEFINE_MUTEX(nl_mutex);
 #endif
@@ -127,6 +139,7 @@ int mtlk_nl_bt_acs_init(void)
 #else
   struct netlink_kernel_cfg bt_acs_nl_cfg;
 
+  memset(&bt_acs_nl_cfg, 0, sizeof(bt_acs_nl_cfg));	//pc2005 from 5.3
   bt_acs_nl_cfg.groups = NETLINK_BT_ACS_GROUP_LAST;
   bt_acs_nl_cfg.flags = 0;
   bt_acs_nl_cfg.input = &bt_acs_nl_input;
@@ -232,6 +245,8 @@ int mtlk_nl_init(void)
 #else
   {
     struct netlink_kernel_cfg nl_cfg;
+
+    memset(&nl_cfg, 0, sizeof(nl_cfg));	//pc2005 from 5.3
     nl_cfg.groups = 3;
     nl_cfg.flags = 0;
     nl_cfg.input = &nl_input;
@@ -315,9 +330,11 @@ int mtlk_nl_send_brd_msg(void *data, int length, gfp_t flags, u32 dst_group, u8 
   memcpy((char *)mhdr + sizeof(*mhdr), data, length);
 
   /* send multicast genetlink message */
-  genl_res = genlmsg_end(skb, msg_header);
-  if (genl_res < 0)
-    goto out_free_skb;
+//TODO kernel changed int -> void
+//  genl_res = 
+  genlmsg_end(skb, msg_header);
+//  if (genl_res < 0)
+//    goto out_free_skb;
   
   /* the group to broadcast on is calculated on base of family id */
   send_group = mtlk_genl_family.id + dst_group - 1;
@@ -325,8 +342,10 @@ int mtlk_nl_send_brd_msg(void *data, int length, gfp_t flags, u32 dst_group, u8 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,19)
   genl_res = genlmsg_multicast(skb, 0, send_group);
 #else
-  genl_res = genlmsg_multicast(skb, 0, send_group, flags);
+  send_group = dst_group;
+  genl_res = genlmsg_multicast(&mtlk_genl_family, skb, 0, send_group, flags);
 #endif
+
   if (genl_res)
     return MTLK_ERR_UNKNOWN;
   else
@@ -355,7 +374,8 @@ int mtlk_nl_init(void)
    * to be readable via sysfs and iwpriv */
   mtlk_genl_family_id = mtlk_genl_family.id;
 
-  if (mtlk_nl_bt_acs_init() != MTLK_ERR_OK){
+  if (mtlk_nl_bt_acs_init() != MTLK_ERR_OK) {
+    genl_unregister_family(&mtlk_genl_family);
     return MTLK_ERR_UNKNOWN;
   }
 

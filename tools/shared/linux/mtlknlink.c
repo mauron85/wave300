@@ -130,9 +130,15 @@ static int parse_nl_cb(struct nl_msg *msg, void *arg)
   return NL_OK;
 }
 
+#if 0 // pc2005 from 5.3 MTCFG_LINUX_BACKPORT
 int __MTLK_IFUNC
 mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
                   mtlk_netlink_callback_t receive_callback, void* receive_callback_ctx)
+#else
+int __MTLK_IFUNC
+mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, const char* group_name,
+                  mtlk_netlink_callback_t receive_callback, void* receive_callback_ctx)
+#endif
 {
   int res = 0;
   int irb_broadcast_group;
@@ -144,7 +150,7 @@ mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
   nlink_socket->receive_callback_ctx = receive_callback_ctx;
 
   /* Allocate a new netlink socket */
-  nlink_socket->sock = nl_handle_alloc();
+  nlink_socket->sock = nl_socket_alloc();
   if (NULL == nlink_socket->sock) {
     ELOG_V("Generic netlink socket allocation failed");
     res = -1;
@@ -166,8 +172,20 @@ mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
     goto err_dealloc;
   }
 
+#if 0 //pc2005 5.3 MTCFG_LINUX_BACKPORT
+//in 3.4 it would be if 1
+
   /* use family id as the base for broadcast group */
   irb_broadcast_group = nlink_socket->family + netlink_group - 1;
+#else
+  /* Get broadcast group id by family and group name */
+  irb_broadcast_group = genl_ctrl_resolve_grp(nlink_socket->sock, MTLK_GENL_FAMILY_NAME, group_name);
+  if (irb_broadcast_group < 0) {
+    ELOG_V("Cannot get Generic Netlink Broadcast droup ID.");
+    res = -1;
+    goto err_dealloc;
+  }
+#endif
 
   /* register to receive messsages from interested group */
   if (nl_socket_add_membership(nlink_socket->sock, irb_broadcast_group) < 0) {
@@ -179,7 +197,7 @@ mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
   /* This socket have to process all messages and not 
      only explicitly requested as it is should be in 
      event processing */
-  nl_disable_sequence_check(nlink_socket->sock);
+  nl_socket_disable_seq_check(nlink_socket->sock);
 
   /* Allow large data reception  */
   nl_socket_enable_msg_peek(nlink_socket->sock);
@@ -191,7 +209,8 @@ mtlk_nlink_create(mtlk_nlink_socket_t* nlink_socket, int netlink_group,
   goto end;
 
 err_dealloc:
-  nl_handle_destroy(nlink_socket->sock);
+  nl_close(nlink_socket->sock);
+  nl_socket_free(nlink_socket->sock);
 end:
   return res;
 }
@@ -232,7 +251,7 @@ mtlk_nlink_cleanup(mtlk_nlink_socket_t* nlink_socket)
 {
   MTLK_ASSERT(NULL != nlink_socket);
   nl_close(nlink_socket->sock);
-  nl_handle_destroy(nlink_socket->sock);
+  nl_socket_free(nlink_socket->sock);
 }
 
 #else /* MTCFG_USE_GENL */

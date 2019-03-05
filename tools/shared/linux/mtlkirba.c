@@ -236,7 +236,11 @@ _irba_notification_thread_proc (void* param)
   int res;
   mtlk_nlink_socket_t nl_socket;
 
+#if 1 // pc2005 linux backport config param from 5.3
+  res = mtlk_nlink_create(&nl_socket, MTLK_NETLINK_IRBM_GROUP_NAME, _mtlk_irba_packet_processor, app_data);
+#else
   res = mtlk_nlink_create(&nl_socket, NETLINK_IRBM_GROUP, _mtlk_irba_packet_processor, app_data);
+#endif
   if(res < 0) {
     ELOG_SD("Failed to create netlink socket: %s (%d)", strerror(res), res);
     goto end;

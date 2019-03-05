@@ -1200,7 +1200,7 @@ _notification_thread_proc (void *param)
 
   MTLK_UNREFERENCED_PARAM(param);
 
-  res = mtlk_nlink_create(&nl_socket, NETLINK_LOGSERVER_GROUP, _parse_log, NULL);
+  res = mtlk_nlink_create(&nl_socket, MTLK_NETLINK_LOGSERVER_GROUP_NAME, _parse_log, NULL);
   if (res < 0) {
     ELOG_SD("Failed to create netlink socket: %s (%d)", strerror(res), res);
     goto end;
