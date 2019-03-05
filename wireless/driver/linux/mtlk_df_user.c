@@ -1421,7 +1421,7 @@ _mtlk_df_user_fill_hw_cfg(mtlk_hw_cfg_t *cfg, char *str)
   char *next_token = str;
   int res = MTLK_ERR_PARAMS;
 
-  memset(cfg, 0, sizeof(cfg));
+  memset(cfg, 0, sizeof(*cfg));
 
   next_token = mtlk_get_token(next_token, buf, sizeof(buf), ',');
   if (next_token) {

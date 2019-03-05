@@ -977,8 +977,8 @@ _flush_on_rmmod (int hw_idx, int storage)
     goto close;
   }
 
-  memset(bak, 0, sizeof(*bak));
-  memset(pattern, 0, sizeof(*pattern));
+  memset(bak, 0, data_size);
+  memset(pattern, 0, data_size);
 
   /* read original */
   size = __nvm_read(hw_idx, storage, 0, bak, data_size);
