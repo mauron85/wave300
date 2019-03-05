@@ -96,7 +96,7 @@ MTLK_COMMON_CPP_FLAGS=-DMTLK_SOURCE_VERSION="\"$(_MTLK_VERSION).$(_REVISION_VERS
                       -include $(abs_top_builddir)/config.h \
                       -include $(abs_top_builddir)/.config.h
 
-_MTLK_ALLLANG_FLAGS=-Wall -Wno-multichar -fno-strict-aliasing -Werror
+_MTLK_ALLLANG_FLAGS=-Wall -Wno-multichar -fno-strict-aliasing
 
 MTLK_COMMON_C_FLAGS=$(_MTLK_ALLLANG_FLAGS)
 MTLK_COMMON_CXX_FLAGS=$(_MTLK_ALLLANG_FLAGS)
