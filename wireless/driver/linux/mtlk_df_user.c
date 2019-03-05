@@ -391,8 +391,14 @@ mtlk_df_ui_is_promiscuous(mtlk_df_t *df)
 void __MTLK_IFUNC
 mtlk_df_ui_notify_tx_start(mtlk_df_t *df)
 {
+  struct netdev_queue *txq;
+
   MTLK_ASSERT(NULL != df);
-  mtlk_df_get_user(df)->dev->trans_start = jiffies;
+
+//fixes build for x86_64. tested up to linux 4.8
+  txq = netdev_get_tx_queue(mtlk_df_get_user(df)->dev, 0);
+  if (txq->trans_start != jiffies)
+    txq->trans_start = jiffies;
 }
 
 MTLK_INIT_STEPS_LIST_BEGIN(df_user)
@@ -4420,7 +4426,8 @@ _mtlk_df_user_unregister_ndev(mtlk_df_user_t *df_user, mtlk_vap_manager_interfac
        * On ioctl exit rtnl_unlock() is called, which in turn calls netdev_run_todo() function
        * - it completes unregistration of network device.
        * We MUST NOT call rtnl_unlock() from within ioctl */
-      df_user->dev->destructor = free_netdev;
+//TODO destructor removed
+//      df_user->dev->destructor = free_netdev;
 
       /* doesn't hold rtnl_lock(), it's already held, because we are in ioctl now */
       unregister_netdevice(df_user->dev);
@@ -4567,7 +4574,9 @@ mtlk_df_ui_indicate_rx_data(mtlk_df_t *df, mtlk_nbuf_t *nbuf)
 
   nbuf->protocol        = eth_type_trans(nbuf, nbuf->dev);
   res                   = netif_rx(nbuf);
-  df_user->dev->last_rx = jiffies;
+
+//TODO removed in kernel
+//  df_user->dev->last_rx = jiffies;
 
   if(NET_RX_SUCCESS != res)
   {
@@ -8466,7 +8475,9 @@ mtlk_df_user_delete(mtlk_df_user_t* df_user)
   struct net_device* dev = df_user->dev;
 
   _mtlk_df_user_cleanup(df_user);
-  if (dev && !dev->destructor) {
+//TODO destructor removed in kernel
+//  if (dev && !dev->destructor) {
+  if (dev) {
     free_netdev(dev);
   }
 }
