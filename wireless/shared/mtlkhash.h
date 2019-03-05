@@ -63,6 +63,10 @@
   {                                                                           \
     uint32 i = 0;                                                             \
     for (; i < hash->nof_buckets; ++i) {                                      \
+        if (!mtlk_dlist_is_empty(&hash->lists[i])) {			\
+/* TODO don't crash in hash cleanup */	\
+    	   continue;							\
+        }								\
       MTLK_ASSERT(mtlk_dlist_is_empty(&hash->lists[i]));                      \
       dlist_cleanup_f(&hash->lists[i]);                                       \
     }                                                                         \

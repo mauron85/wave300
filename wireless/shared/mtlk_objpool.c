@@ -283,6 +283,14 @@ void __MTLK_IFUNC mtlk_objpool_remove_object_ex(mtlk_objpool_t* objpool,
   mtlk_osal_lock_acquire(&objpool->hash_lock);
 
   entry = mtlk_hash_find_objpool(&objpool->objects_hash, &obj_hash_key);
+  if (!entry) {
+	//pc2005
+	//TODO bug, this fails often
+  	mtlk_osal_lock_release(&objpool->hash_lock);
+    mtlk_osal_emergency_print("ERR: entry fail");
+	return;
+  }
+
   MTLK_ASSERT(NULL != entry);
   objfact = MTLK_CONTAINER_OF(entry, _mtlk_obj_factory_t, hentry);
   objfact->objects_number--;

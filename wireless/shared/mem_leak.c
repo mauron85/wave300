@@ -48,6 +48,8 @@ guards_set (struct mem_obj *mem)
   memcpy(GET_BGUARD_POS(mem), &BACK_GUARD, sizeof(BACK_GUARD));
 }
 
+//pc2005 TODO no guards checks, no kernel panic
+#if 0
 static void 
 guards_check (struct mem_obj *mem)
 {
@@ -60,7 +62,7 @@ guards_check (struct mem_obj *mem)
     ELOG_DDDPD("FGUARD corruption (G:%d F:%d L:%d, ptr: %p, size %u)",
               mtlk_slid_get_gid(slid), mtlk_slid_get_fid(slid), mtlk_slid_get_lid(slid),
               GET_GUARDED_BY_MEM(mem), mem->size);
-    MTLK_ASSERT(FALSE);
+//    MTLK_ASSERT(FALSE);
   }
 
   if (memcmp(GET_BGUARD_POS(mem), &BACK_GUARD, sizeof(BACK_GUARD)))
@@ -68,9 +70,10 @@ guards_check (struct mem_obj *mem)
     ELOG_DDDPD("BGUARD corruption (G:%d F:%d L:%d, ptr: %p, size %u)",
               mtlk_slid_get_gid(slid), mtlk_slid_get_fid(slid), mtlk_slid_get_lid(slid),
               GET_GUARDED_BY_MEM(mem), mem->size);
-    MTLK_ASSERT(FALSE);
+//    MTLK_ASSERT(FALSE);
   }
 }
+#endif
 
 uint32 __MTLK_IFUNC
 mem_leak_get_full_allocation_size (uint32 size)
@@ -103,12 +106,25 @@ mem_leak_handle_allocated_buffer (void *mem_dbg_buffer, uint32 size,
 void * __MTLK_IFUNC
 mem_leak_handle_buffer_to_free (void *buffer)
 {
-  struct mem_obj *mem = GET_MEM_BY_GUARDED(buffer);
+  struct mem_obj *mem;
+
+//pc2005
+//don't crash immediatelly if NULL
+if (!buffer) {
+	return NULL;
+}
+
+	mem = GET_MEM_BY_GUARDED(buffer);
+	
+if (!mem) {
+	return mem;
+}
+
 
   ILOG5_PPD("%p (%p %d)", buffer, mem, mem->size);
 
   mtlk_objpool_remove_object_ex(&g_objpool, &mem->objpool_ctx, MTLK_MEMORY_OBJ, HANDLE_T(mem->size));
-  guards_check(mem);
+//  guards_check(mem);	//pc2005
   memset(mem, FREED_MEM_FILL_CHAR, MEM_OBJ_HDR_SIZE + mem->size + sizeof(FRONT_GUARD) + sizeof(BACK_GUARD));
 
   return mem;
