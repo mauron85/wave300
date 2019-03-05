@@ -614,7 +614,6 @@ mtlk_vap_get_hw_wss (mtlk_vap_handle_t vap_handle)
   return _info->manager->hw_wss;
 }
 
-
 static void __MTLK_IFUNC
 _mtlk_vap_cleanup (mtlk_vap_handle_t vap_handle)
 {

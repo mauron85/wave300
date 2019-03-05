@@ -108,9 +108,9 @@ int mtlk_nl_bt_acs_send_brd_msg(void *data, int length)
   memcpy(NLMSG_DATA(nlh), data, length);
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
-  NETLINK_CB(skb).pid = 0;      /* from kernel */
+  NETLINK_CB(skb).pid = 0;  /* from kernel */
 #else
-  NETLINK_CB(skb).portid = 0;
+  NETLINK_CB(skb).portid = 0;  /* from kernel */
 #endif
   
   if (netlink_broadcast(bt_acs_nl_sock, skb, 0, NETLINK_BT_ACS_GROUP, GFP_ATOMIC))
@@ -204,7 +204,7 @@ int mtlk_nl_send_brd_msg(void *data, int length, gfp_t flags, u32 dst_group, u8 
   if (netlink_broadcast(nl_sock, skb, 0, dst_group, flags))
     return MTLK_ERR_UNKNOWN;
 #endif
-  
+
   return MTLK_ERR_OK;
 }
 
@@ -218,13 +218,13 @@ int mtlk_nl_init(void)
    * so, total number of 3 groups must be told to kernel
    * when creating socket
    */
-   
+
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,14)
   nl_sock = netlink_kernel_create(NETLINK_USERSOCK, nl_input);
 #elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,22)
   nl_sock = netlink_kernel_create(NETLINK_USERSOCK, 3, nl_input, THIS_MODULE);
 #elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
-  nl_sock = netlink_kernel_create(NETLINK_USERSOCK, 3, nl_input, 
+  nl_sock = netlink_kernel_create(NETLINK_USERSOCK, 3, nl_input,
                                                        &nl_mutex, THIS_MODULE);
 #elif LINUX_VERSION_CODE < KERNEL_VERSION(3,6,0)
   nl_sock = netlink_kernel_create(&init_net, NETLINK_USERSOCK, 3, nl_input,
@@ -256,7 +256,7 @@ void mtlk_nl_cleanup(void)
 {
   if(nl_sock)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
-    sock_release(nl_sock->socket);  
+    sock_release(nl_sock->socket);
 #else
     sock_release(nl_sock->sk_socket);
 #endif
@@ -293,19 +293,19 @@ int mtlk_nl_send_brd_msg(void *data, int length, gfp_t flags, u32 dst_group, u8 
 
   /* add the genetlink message header */
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
-  msg_header = genlmsg_put(skb, 0, 0, mtlk_genl_family.id, 0, 0, 
+  msg_header = genlmsg_put(skb, 0, 0, mtlk_genl_family.id, 0, 0,
                            MTLK_GENL_CMD_EVENT, mtlk_genl_family.version);
 #else
   msg_header = genlmsg_put(skb, 0, 0, &mtlk_genl_family, 0, MTLK_GENL_CMD_EVENT);
 #endif
-  if (!msg_header) 
+  if (!msg_header)
     goto out_free_skb;
 
   /* fill the data */
   attr = nla_reserve(skb, MTLK_GENL_ATTR_EVENT, full_len);
   if (!attr)
     goto out_free_skb;
-    
+
   mhdr = (struct mtlk_nl_msghdr*) (nla_data(attr));
   memcpy(mhdr->fingerprint, "mtlk", 4);
   mhdr->proto_ver = 1;
@@ -329,7 +329,7 @@ int mtlk_nl_send_brd_msg(void *data, int length, gfp_t flags, u32 dst_group, u8 
 #endif
   if (genl_res)
     return MTLK_ERR_UNKNOWN;
-  else 
+  else
     return MTLK_ERR_OK;
 
 out_free_skb:

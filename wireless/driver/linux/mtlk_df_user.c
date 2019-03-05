@@ -10,7 +10,7 @@
 /*
  * $Id$
  *
- * 
+ *
  *
  * Driver framework implementation for Linux
  *

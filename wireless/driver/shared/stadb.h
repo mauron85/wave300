@@ -653,7 +653,7 @@ mtlk_sta_on_security_negotiated(sta_entry *sta)
 
 struct nic;
 
-typedef struct  
+typedef struct
 {
   mtlk_handle_t   usr_data;
   BOOL            (__MTLK_IFUNC *sta_inactivity_on)(mtlk_handle_t    usr_data,
@@ -752,7 +752,7 @@ __mtlk_stadb_find_sta_dbg (const char *f, int l, sta_db *stadb, const unsigned c
 {
   sta_entry                    *sta = NULL;
   MTLK_HASH_ENTRY_T(ieee_addr) *h;
-    
+
   mtlk_osal_lock_acquire(&stadb->lock);
   h = mtlk_hash_find_ieee_addr(&stadb->hash, (IEEE_ADDR *)mac);
   if (h) {
@@ -785,11 +785,11 @@ mtlk_stadb_get_ap (sta_db *stadb)
     mtlk_sta_incref(sta); /* Reference by caller */
   }
   mtlk_osal_lock_release(&stadb->lock);
-  
+
   return sta;
 }
 
-typedef struct  
+typedef struct
 {
   sta_entry **arr;
   uint32      size;

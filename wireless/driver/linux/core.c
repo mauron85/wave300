@@ -2979,6 +2979,10 @@ _mtlk_mbss_preactivate (struct nic *nic, BOOL rescan_exempted)
   /* restore all after AP scan */
   MTLK_CORE_PDB_SET_INT(nic, PARAM_DB_CORE_FREQ_BAND_CFG, ap_scan_band_cfg);
 
+  /*
+   * at this point spectrum & channel may be changed by AOCS
+   */
+
   channel = MTLK_CORE_PDB_GET_INT(nic, PARAM_DB_CORE_CHANNEL_CUR);
   actual_spectrum_mode = MTLK_CORE_PDB_GET_INT(nic, PARAM_DB_CORE_SELECTED_SPECTRUM_MODE);
 

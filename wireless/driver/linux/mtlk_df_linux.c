@@ -10,7 +10,7 @@
 /*
  * $Id$
  *
- * 
+ *
  *
  * Driver framework implementation for Linux
  *
@@ -49,13 +49,15 @@ mtlk_df_is_slave (mtlk_df_t *df)
 {
   MTLK_ASSERT(NULL != df);
 
-  return !mtlk_vap_is_master(df->vap_handle); 
+  return !mtlk_vap_is_master(df->vap_handle);
 }
 
 BOOL
 mtlk_df_is_ap(mtlk_df_t *df)
 {
   MTLK_ASSERT(NULL != df);
+
+//NOTICE this function determines AP/STA mode
 
   return mtlk_vap_is_ap(df->vap_handle);
 }

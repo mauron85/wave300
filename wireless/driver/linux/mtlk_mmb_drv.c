@@ -721,6 +721,9 @@ MTLK_INIT_STEPS_LIST_END(mmb_drv);
 static __INLINE mtlk_work_mode_e 
 _work_mode_get(mtlk_hw_t *hw)
 {
+
+//NOTICE this is one of functions to determine if driver is in AP or STA mode
+
   return dut[mtlk_hw_mmb_get_card_idx(hw)] ? MTLK_MODE_DUT :
     (ap[mtlk_hw_mmb_get_card_idx(hw)] ? MTLK_MODE_AP : MTLK_MODE_STA);
 }

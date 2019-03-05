@@ -154,12 +154,12 @@ mtlk_progmodel_create(mtlk_txmm_t *txmm, struct nic *nic, int freq, int spectrum
     {
       ILOG1_V("Progmodel initialized");
     }
-    else 
+    else
     {
       ELOG_V("Can't initialize Progmodel object");
       mtlk_osal_mem_free(fw);
       fw = NULL;
-    }  
+    }
   }
   else
   {

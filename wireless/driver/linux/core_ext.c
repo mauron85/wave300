@@ -11,7 +11,7 @@
 /*
  * $Id$
  *
- * 
+ *
  *
  * Core functionality (extension)
  *
@@ -6816,41 +6816,41 @@ static int __MTLK_IFUNC _mtlk_core_send_ce_serialized_callback(mtlk_handle_t con
   mtlk_core_t *core;
   mtlk_txmm_msg_t man_msg;
   mtlk_txmm_data_t *man_entry;
-  
+
   ILOG2_V("Sending Coexistence Element");
   core = (mtlk_core_t*)context;
-  
+
   MTLK_ASSERT(NULL != core);
   MTLK_ASSERT(NULL != payload);
   MTLK_ASSERT(sizeof(UMI_COEX_EL) == size);
-  
+
   man_entry = mtlk_txmm_msg_init_with_empty_data(&man_msg, mtlk_vap_get_txmm(core->vap_handle), NULL);
   if (man_entry != NULL) {
      man_entry->id           = UM_MAN_SET_COEX_EL_TEMPLATE_REQ;
      man_entry->payload_size = size;
      memcpy(man_entry->payload, payload, size);
-  
+
      res = mtlk_txmm_msg_send_blocked(&man_msg, MTLK_MM_BLOCKED_SEND_TIMEOUT);
      if (res != MTLK_ERR_OK) {
        ELOG_DD("CID-%04x: Can't send UMI_COEX_EL request to MAC (err=%d)", mtlk_vap_get_oid(core->vap_handle), res);
      }
      mtlk_txmm_msg_cleanup(&man_msg);
-   } 
+   }
   else {
     ELOG_D("CID-%04x: Can't send UMI_COEX_EL request to MAC due to the lack of MAN_MSG", mtlk_vap_get_oid(core->vap_handle));
     res = MTLK_ERR_NO_RESOURCES;
   }
-  
+
   return res;
 }
 
 static void _mtlk_core_send_ce_callback(mtlk_handle_t context, UMI_COEX_EL *coexistence_element)
 {
   mtlk_core_t *core;
-  
+
   ILOG2_V("Scheduling Coexistence Element sending on serializer");
   core = (mtlk_core_t*)context;
-  
+
   MTLK_ASSERT(NULL != core);
   mtlk_core_schedule_internal_task(core, context, _mtlk_core_send_ce_serialized_callback, coexistence_element, sizeof(*coexistence_element));
 }
@@ -6904,13 +6904,13 @@ static int _mtlk_core_send_exemption_policy_serialized_callback(mtlk_handle_t co
   mtlk_core_t *core;
   mtlk_txmm_msg_t man_msg;
   mtlk_txmm_data_t *man_entry;
-  
+
   ILOG2_V("Sending Exemption Policy To FW");
   core = (mtlk_core_t*)context;
-  
+
   MTLK_ASSERT(NULL != core);
   MTLK_ASSERT(sizeof(BOOL) == size);
-  
+
   man_entry = mtlk_txmm_msg_init_with_empty_data(&man_msg, mtlk_vap_get_txmm(core->vap_handle), NULL);
   if (man_entry != NULL) {
       man_entry->id           = UM_MAN_SET_SCAN_EXEMPTION_POLICY_REQ;
@@ -6921,7 +6921,7 @@ static int _mtlk_core_send_exemption_policy_serialized_callback(mtlk_handle_t co
         ELOG_DD("CID-%04x: Can't send UMI_SCAN_EXEMPTION_POLICY request to MAC (err=%d)", mtlk_vap_get_oid(core->vap_handle), res);
       }
       mtlk_txmm_msg_cleanup(&man_msg);
-  } 
+  }
   else {
     ELOG_D("CID-%04x: Can't send UMI_SCAN_EXEMPTION_POLICY request to MAC due to the lack of MAN_MSG", mtlk_vap_get_oid(core->vap_handle));
     res = MTLK_ERR_NO_RESOURCES;
