@@ -2316,6 +2316,9 @@ _mtlk_mmb_wait_chi_magic(mtlk_hw_t *hw)
 
   mtlk_hw_init_evt_wait_res_e wait_res = MTLK_HW_INIT_EVT_WAIT_RES_LAST;
 
+  unsigned int *tptr;
+  int i;
+
 #ifdef MTCFG_USE_INTERRUPT_POLLING
   mtlk_osal_timestamp_t start_ts = mtlk_osal_timestamp();
 #endif
@@ -2331,6 +2334,8 @@ _mtlk_mmb_wait_chi_magic(mtlk_hw_t *hw)
     (MTLK_HW_INIT_EVT_WAIT(hw, MTLK_CHI_MAGIC_TIMEOUT) == MTLK_ERR_OK)?
       MTLK_HW_INIT_EVT_WAIT_RES_OK:MTLK_HW_INIT_EVT_WAIT_RES_FAILED;
 
+tptr=(void*)&hw->chi_data;
+
 #ifdef MTCFG_USE_INTERRUPT_POLLING
   wait_res = MTLK_HW_INIT_EVT_WAIT_RES_POLLING;
 
@@ -2343,6 +2348,12 @@ _mtlk_mmb_wait_chi_magic(mtlk_hw_t *hw)
                       CHI_ADDR,
                       &hw->chi_data,
                       sizeof(hw->chi_data));
+
+pr_info("command buffer dump %px:\n",tptr);
+
+for (i=0;i<0x50;i++) {
+pr_info("%04x: %08x\n",i,tptr[i]);
+}
 
     if (wait_res != MTLK_HW_INIT_EVT_WAIT_RES_FAILED &&
         MAC_TO_HOST32(hw->chi_data.u32Magic) == HOST_MAGIC) {
