@@ -800,22 +800,22 @@ static int logger_stat_read (char *page, char **start, off_t off,
 #else
 static int show_logger_stat(struct seq_file *seq, void *v)
 {
-  int bytes_written = 0;
 
   mtlk_osal_lock_acquire(&log_data.data_lock);
 
-  bytes_written += seq_printf(seq, "%10u\tLog packets processed successfully\n",
+  seq_printf(seq, "%10u\tLog packets processed successfully\n",
                               log_data.log_pkt_reservations_succeeded);
-  bytes_written += seq_printf(seq, "%10u\tLog packets failed to process\n",
+  seq_printf(seq, "%10u\tLog packets failed to process\n",
                               log_data.log_pkt_reservations_failed);
-  bytes_written += seq_printf(seq, "%10u\tLog buffer allocations succeeded\n",
+  seq_printf(seq, "%10u\tLog buffer allocations succeeded\n",
                               log_data.log_buff_allocations_succeeded);
-  bytes_written += seq_printf(seq, "%10u\tLog buffer allocations failed\n",
+  seq_printf(seq, "%10u\tLog buffer allocations failed\n",
                               log_data.log_buff_allocations_failed);
 
   mtlk_osal_lock_release(&log_data.data_lock);
 
-  return bytes_written;
+//kernel removed return length from seq_*
+	return seq->count;
 }
 
 static int logger_stat_open(struct inode *inode, struct file *file)

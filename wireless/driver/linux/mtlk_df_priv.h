@@ -95,8 +95,9 @@ mtlk_df_proc_node_remove_entry(char *name,
 void* __MTLK_IFUNC
 mtlk_df_proc_seq_entry_get_df(mtlk_seq_entry_t *seq_ctx);
 
-int mtlk_aux_seq_printf(mtlk_seq_entry_t *seq_ctx, const char *fmt, ...);
-int mtlk_aux_seq_write(mtlk_seq_entry_t *seq_ctx, const void *data, size_t len);
+//NOTICE caused problems with gcc -Werror -Wall
+//int mtlk_aux_seq_printf(mtlk_seq_entry_t *seq_ctx, const char *fmt, ...);
+//int mtlk_aux_seq_write(mtlk_seq_entry_t *seq_ctx, const void *data, size_t len);
 
 mtlk_df_proc_fs_node_t* mtlk_dfg_get_drv_proc_node(void);
 

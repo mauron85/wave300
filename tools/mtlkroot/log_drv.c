@@ -217,23 +217,25 @@ end:
 int __MTLK_IFUNC
 mtlk_log_get_conf (struct seq_file *seq)
 {
-  int i, oid, len, written = 0;
+
+//pc2005 kernel changed int to void for seq_*
+
+  int i, oid;
   uint8 clvl, rlvl;
 
   for (oid = 0; oid < MAX_OID; oid++) {
-    len = seq_printf(seq, "GID  c  r  for OID %d\n", oid);
-    written += len;
+    seq_printf(seq, "GID  c  r  for OID %d\n", oid);
+    
     for (i = 0; i < MAX_GID; i++) {
       clvl = LOG_GET_DLVL_CON(log_data.dbg_level[oid][i]);
       rlvl = LOG_GET_DLVL_RT(log_data.dbg_level[oid][i]);
       if (!clvl && !rlvl)
         continue;
-      len = seq_printf(seq, "%3d %2d %2d\n", i, clvl, rlvl);
-      written += len;
+      seq_printf(seq, "%3d %2d %2d\n", i, clvl, rlvl);
     }
   }
 
-  return written;
+	return seq->count;
 }
 #endif
 
