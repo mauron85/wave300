@@ -1133,7 +1133,7 @@ So we overwrite 6 bytes of LLC/SNAP with SA.
   ILOG4_V("Munging IEEE 802.11 header to be Ethernet DIX (II), irreversible!");
   cp = (unsigned char *) nbuf->data;
 
-  mtlk_dump(4, cp, 64, "dump of recvd .11n packet");
+  mtlk_dump(4, cp, 112, "dump of recvd .11n packet");
 
   // Chop the last four bytes (FCS)
   mtlk_df_nbuf_trim(nbuf, nbuf->len-4);
