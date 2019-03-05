@@ -565,8 +565,6 @@ static inline int is_broadcast_ether_addr(const u8 *addr)
 }
 #endif // LINUX_VERSION_CODE < KERNEL_VERSION(2,6,14)
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,15)
-
 /**
  * compare_ether_addr - Compare two Ethernet addresses
  * @addr1: Pointer to a six-byte array containing the Ethernet address
@@ -580,9 +578,11 @@ static inline unsigned compare_ether_addr(const u8 *addr1, const u8 *addr2)
         const u16 *b = (const u16 *) addr2;
 
         return ((a[0] ^ b[0]) | (a[1] ^ b[1]) | (a[2] ^ b[2])) != 0;
-}
 
-#endif // LINUX_VERSION_CODE < KERNEL_VERSION(2,6,15)
+//kernel equivalent function, notice inverted return values!        
+//	return (! ether_addr_equal(addr1,addr2));
+        
+}
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,12)
 /**
