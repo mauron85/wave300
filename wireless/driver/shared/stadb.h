@@ -461,6 +461,7 @@ void __MTLK_IFUNC
 __mtlk_sta_on_unref_private(sta_entry *sta);
 /********************************************************/
 
+//NOTICE this will show all references
 //#define STA_REF_DBG
 
 #ifndef STA_REF_DBG
