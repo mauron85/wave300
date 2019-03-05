@@ -24,7 +24,7 @@ define $(module_canonical_name)_BUILD_CMD
                                   mtlk_build_kernel_library=$(mtlk_build_kernel_library) && \
      { { test x"$(mtlk_build_kernel_library)" != x"y"; } || echo lib.a > .built_binary_name; } && \
      { { test x"$(mtlk_build_kernel_library)" = x"y"; } || echo $($(module_canonical_name)_binary_name) > .built_binary_name; } && \
-     ( @kernel_cross_compile@strip -dx `cat .built_binary_name` ) && \
+     ( @kernel_cross_compile@strip -dx `cat .built_binary_name`; true) && \
      ( $(rebase_copy_cmd) drv_toolchain_info $(abs_builddir)) && \
      $(rebase_copy_cmd) `cat .built_binary_name` $(abs_builddir)/$($(module_canonical_name)_binary_name) || \
      ( rm -f $(abs_builddir)/$($(module_canonical_name)_binary_name) && exit 11 ) )
