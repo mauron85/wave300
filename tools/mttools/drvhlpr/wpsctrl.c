@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
+#include <fcntl.h>
 
 #include <asm/types.h>
 #include <sys/socket.h>

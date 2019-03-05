@@ -20,6 +20,8 @@
 #include <linux/interrupt.h>
 #include <linux/device.h>
 #include <linux/pci.h>
+#include <linux/cpufreq.h>	//TODO may not be required??
+#include <lantiq_soc.h>
 
 #ifdef MTCFG_PLATFORM_GEN35FPGA
   #include <mtlk_interrupt.h>

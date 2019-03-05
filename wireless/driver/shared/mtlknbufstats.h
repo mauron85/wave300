@@ -12,6 +12,8 @@
 
 #ifdef MTCFG_PER_PACKET_STATS
 
+#include "mtlknbufpriv.h"	//NOTICE seemed to be missing
+
 #define   MTLK_IDEFS_ON
 #include "mtlkidefs.h"
 
