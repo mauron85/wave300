@@ -16,7 +16,7 @@
 
 #if defined(MTLK_IDEFS_ON) && defined(__INTERNAL_MTLK_IDEFS_ON__)
 
-#error mtlkidefs.h already included here!
+#warning mtlkidefs.h already included here! ... b 
 
 #elif defined(MTLK_IDEFS_ON) && !defined(__INTERNAL_MTLK_IDEFS_ON__)
 #define __INTERNAL_MTLK_IDEFS_ON__

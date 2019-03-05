@@ -8,6 +8,8 @@
 
 ******************************************************************************/
 
+//pc2005
+//TODO check packing! this file seems to be hard copied (build bug?)
 
 #ifdef MTLK_IDEFS_OFF
 #undef MTLK_IDEFS_OFF
@@ -16,7 +18,7 @@
 
 #if defined(MTLK_IDEFS_ON) && defined(__INTERNAL_MTLK_IDEFS_ON__)
 
-#error mtlkidefs.h already included here!
+#warning mtlkidefs.h already included here! (1)
 
 #elif defined(MTLK_IDEFS_ON) && !defined(__INTERNAL_MTLK_IDEFS_ON__)
 #define __INTERNAL_MTLK_IDEFS_ON__
