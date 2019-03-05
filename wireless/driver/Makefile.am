@@ -8,9 +8,9 @@ endif
 
 mtlk_ko_src_dir = linux
 
-if BUILD_DRIVER
-
 include $(top_srcdir)/Makefile.am.common
+
+if BUILD_DRIVER
 
 module_canonical_name = mtlk_ko
 mtlk_ko_binary_name = mtlk.ko

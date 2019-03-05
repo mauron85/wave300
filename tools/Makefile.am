@@ -20,9 +20,10 @@ DIST_SUBDIRS = $(SUBDIRS)
 
 oom_killer_hook_ko_src_dir=oom_killer_hook
 
+include $(top_srcdir)/Makefile.am.common
+
 if BUILD_HELPER_TOOLS
 
-include $(top_srcdir)/Makefile.am.common
 
 module_canonical_name = oom_killer_hook_ko
 oom_killer_hook_ko_binary_name = oom_killer_hook.ko

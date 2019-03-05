@@ -1,0 +1,11 @@
+*.a
+*.o
+Makefile.in
+/autom4te.cache
+/builds
+aclocal.m4
+configure
+.config
+.config.h
+*.d
+.deps

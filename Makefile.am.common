@@ -1,5 +1,7 @@
 # $Id$
 
+AUTOMAKE_OPTIONS = subdir-objects
+
 qstrip_func=$(strip $(subst ",,$(1)))
 
 tools_srcdir=$(top_srcdir)/tools
