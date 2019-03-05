@@ -352,7 +352,7 @@ mtlk_cdev_init (mtlk_cdev_t *cd, const struct mtlk_cdev_cfg *cfg)
 
   cd->cfg = *cfg;
   if (!cd->cfg.max_nodes) {
-    ILOG0_D("Max nodex set to %d", MTLK_CDEV_MAX_NODES_SUPPORTED);
+    ILOG0_D("Max nodes set to %d", MTLK_CDEV_MAX_NODES_SUPPORTED);
     cd->cfg.max_nodes = MTLK_CDEV_MAX_NODES_SUPPORTED;
   }
   else if (cd->cfg.max_nodes > MTLK_CDEV_MAX_NODES_SUPPORTED) {
