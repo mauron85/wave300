@@ -37,7 +37,7 @@ mtlk_aux_print_hex (const void *buf, unsigned int l)
 #ifdef MTCFG_SILENT
 #define LOG_BUFFER
 #else
-#define LOG_BUFFER             printk
+#define LOG_BUFFER             pr_cont
 #endif
 
 void __MTLK_IFUNC
@@ -45,6 +45,9 @@ mtlk_aux_print_hex (const void *buf, unsigned int l)
 {
   unsigned int i,j;
   unsigned char *cp = (unsigned char*)buf;
+
+//TODO should be probably locked
+
   LOG_BUFFER("cp= 0x%p l=%d\n", cp, l);
   for (i = 0; i < l/16; i++) {
     LOG_BUFFER("%04x:  ", 16*i);
