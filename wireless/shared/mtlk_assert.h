@@ -12,13 +12,15 @@
 
 #ifdef MTCFG_DEBUG
 
+//better assert function, otherwise use SLID code and .scd files
 void __MTLK_IFUNC
-__mtlk_assert(mtlk_slid_t slid);
+__mtlk_assert(mtlk_slid_t slid, const char * xxx, const char * yyy, int line);
+
 
 #define __MTLK_ASSERT(expr, slid)  \
   do {                             \
     if (__UNLIKELY(!(expr))) {     \
-      __mtlk_assert(slid);         \
+      __mtlk_assert(slid, #expr, __FILE__, __LINE__);   \
     }                              \
   } while (0)
 
