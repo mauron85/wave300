@@ -458,11 +458,14 @@ _mtlk_df_user_ppa_start_xmit (struct net_device *rx_dev,
   }
   else if (rx_dev != NULL)
   {
+  	int res;
     MTLK_ASSERT(NULL != skb->dev);
     /* as usual shift the eth header with skb->data */
     skb->protocol = eth_type_trans(skb, skb->dev);
     /* push up to protocol stacks */
-    netif_rx(skb);
+    res = netif_rx(skb);
+    pr_info("_mtlk_df_user_ppa_start_xmit, netif_rx res=%i\n", res);
+    
     ++_mtlk_df_user_ppa_tx_sent_up;
   }
   else {
