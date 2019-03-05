@@ -261,7 +261,7 @@ MT_UINT32 HypPciRead(MT_UBYTE unit, MT_UINT32 address, MT_UBYTE size, MT_UINT32 
     bclr->size = size;
     bclr->unit = unit;
 
-    req.u.data.pointer = (caddr_t)bclr;
+    req.u.data.pointer = (__caddr_t)bclr;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 20, &req ))
     {
@@ -311,7 +311,7 @@ MT_UINT32 HypPciWrite(MT_UBYTE unit, MT_UINT32 address, MT_UBYTE size, MT_UINT32
     bclr->unit = unit;
     memcpy( &bclr->data, data, size * sizeof( unsigned long ) );
 
-    req.u.data.pointer = (caddr_t)bclr;
+    req.u.data.pointer = (__caddr_t)bclr;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 21, &req ))
     {
@@ -429,7 +429,7 @@ MT_UINT32 GetMibParams(MT_UINT32 Id, MT_UBYTE type, MT_UINT32 size, MT_BYTE * da
     sMib->Size = size;
     /* sMib->RequestStatus = RequestStatus; - only for return status */
 
-    req.u.data.pointer = (caddr_t)sMib;
+    req.u.data.pointer = (__caddr_t)sMib;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 24, &req ))
     {
@@ -496,7 +496,7 @@ MT_UINT32 SetMibParams(MT_UINT32 Id, MT_UBYTE type, MT_UINT32 size, MT_BYTE * da
 	/* sMib->RequestStatus = RequestStatus; - only for return status */
     memcpy( &sMib->Data, data, size );
 
-    req.u.data.pointer = (caddr_t)sMib;
+    req.u.data.pointer = (__caddr_t)sMib;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 25, &req ))
     {
@@ -654,7 +654,7 @@ MT_UINT32 GenIoctl()
 	{
 	    memcpy( &sIoctl->data, pItem, 256  ); /*Set all*/
     }
-    req.u.data.pointer = (caddr_t)sIoctl;
+    req.u.data.pointer = (__caddr_t)sIoctl;
     /*Execute command*/
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 28, &req ))
     {
@@ -727,7 +727,7 @@ MT_UINT32 DebugTable(MT_UINT32 Id, MT_UINT32 action, MT_UINT32 value, MT_UINT32 
 	        memcpy( &sTable->data, data, 256 ); /*copy all*/
 	/*else - if action == 1 -> the value already coppied*/
 	/********************************/
-    req.u.data.pointer = (caddr_t)sTable;
+    req.u.data.pointer = (__caddr_t)sTable;
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 29, &req ))
     {
         free( sTable );
@@ -789,7 +789,7 @@ MT_UINT32 DrvCatInit(MT_UINT32 category, MT_UINT32 * cnt)
     sReq->datalen = datalen;
 
     memcpy( req.ifr_ifrn.ifrn_name, bcl_ifname, IFNAMSIZ );
-    req.u.data.pointer = (caddr_t)sReq;
+    req.u.data.pointer = (__caddr_t)sReq;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 22, &req ))
     {
@@ -833,7 +833,7 @@ MT_UINT32 DrvCatFree(MT_UINT32 category)
     sReq->category = category;
 
     memcpy( req.ifr_ifrn.ifrn_name, bcl_ifname, IFNAMSIZ );
-    req.u.data.pointer = (caddr_t)sReq;
+    req.u.data.pointer = (__caddr_t)sReq;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 22, &req ))
     {
@@ -887,7 +887,7 @@ MT_UINT32 DrvNameGet(MT_UINT32 category, MT_UINT32 index, MT_UBYTE * name)
     sReq->datalen = datalen;
 
     memcpy( req.ifr_ifrn.ifrn_name, bcl_ifname, IFNAMSIZ );
-    req.u.data.pointer = (caddr_t)sReq;
+    req.u.data.pointer = (__caddr_t)sReq;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 22, &req ))
     {
@@ -942,7 +942,7 @@ MT_UINT32 DrvValGet(MT_UINT32 category, MT_UINT32 index, MT_UINT32 * val)
     sReq->datalen = datalen;
 
     memcpy( req.ifr_ifrn.ifrn_name, bcl_ifname, IFNAMSIZ );
-    req.u.data.pointer = (caddr_t)sReq;
+    req.u.data.pointer = (__caddr_t)sReq;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 22, &req ))
     {
@@ -994,7 +994,7 @@ MT_UINT32 DrvValSet(MT_UINT32 category, MT_UINT32 index, MT_UINT32 val)
     sReq->datalen = datalen;
 
     memcpy( req.ifr_ifrn.ifrn_name, bcl_ifname, IFNAMSIZ );
-    req.u.data.pointer = (caddr_t)sReq;
+    req.u.data.pointer = (__caddr_t)sReq;
 
     if (ioctl( gsocket, SIOCIWFIRSTPRIV + 22, &req ))
     {
