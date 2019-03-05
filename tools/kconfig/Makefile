@@ -15,6 +15,9 @@ CONF_BIN_DIR = .
 MCONF_SRC_DIR = .
 MCONF_BIN_DIR = .
 
+NCONF_SRC_DIR = .
+NCONF_BIN_DIR = .
+
 QCONF_SRC_DIR = .
 QCONF_BIN_DIR = .
 
@@ -23,23 +26,31 @@ LXDIALOG_BIN_DIR = lxdialog
 
 CONF_ELF = $(CONF_BIN_DIR)/conf
 MCONF_ELF = $(MCONF_BIN_DIR)/mconf
+NCONF_ELF = $(NCONF_BIN_DIR)/nconf
 QCONF_ELF = $(QCONF_BIN_DIR)/qconf
 
+zconf.tab.c: zconf.y
+	@bison -ozconf.tab.c -t -l zconf.y
+	@flex -ozconf.lex.c -L zconf.l
+
 #########################
-all: config menuconfig xconfig
+all: config menuconfig nconfig xconfig
 
 menuconfig: $(MCONF_ELF) 
+
+nconfig: $(NCONF_ELF) 
 
 config: $(CONF_ELF)
 
 xconfig: $(QCONF_ELF) 
 
 clean:
-	$(RM) $(MCONF_ELF) $(CONF_ELF) $(QCONF_ELF) \
+	$(RM) $(MCONF_ELF) $(NCONF_ELF) $(CONF_ELF) $(QCONF_ELF) \
 	$(COMMON_OBJFILES) $(COMMON_DEPFILES) \
 	$(CONF_OBJFILES) $(CONF_DEPFILES) \
-	$(LXDIALOG_OBJFILES) $(LXDIALOG_DEPFILES)\
+	$(LXDIALOG_OBJFILES) $(LXDIALOG_DEPFILES) \
 	$(MCONF_OBJFILES) $(MCONF_DEPFILES) \
+	$(NCONF_OBJFILES) $(NCONF_DEPFILES) \
 	$(QCONF_OBJFILES) $(QCONF_DEPFILES) \
 	$(QCONF_CXXOBJFILES) $(QCONF_CXXDEPFILES) \
 	$(QCONF_BIN_DIR)/.tmp_qtcheck 
@@ -79,7 +90,23 @@ MCONF_DEPFILES := $(patsubst %.c, %.d, $(MCONF_DEPFILES))
 
 MCONF_INCLUDES = -I/usr/include/ncurses
 MCONF_DEFINES = -DLOCALE -DCURSES_LOC="<ncurses.h>"
-MCONF_LIBS = -lncurses -ldl
+MCONF_LIBS = -lncursesw -ldl -ltinfo
+
+#########################
+# nconf
+NCONF_SRCFILES = $(NCONF_SRC_DIR)/nconf.c $(NCONF_SRC_DIR)/nconf.gui.c
+#				zconf.tab.c
+
+NCONF_OBJFILES := $(NCONF_SRCFILES)
+NCONF_OBJFILES := $(patsubst %.c, %.o, $(NCONF_OBJFILES))
+
+NCONF_DEPFILES := $(NCONF_SRCFILES)
+NCONF_DEPFILES := $(patsubst %.c, %.d, $(NCONF_DEPFILES))
+
+NCONF_INCLUDES = -I/usr/include/ncurses
+NCONF_DEFINES = -DLOCALE -DCURSES_LOC="<ncurses.h>"
+NCONF_LIBS = -lncursesw -ldl -ltinfo -lmenu -lpanel
+#NCONF_LIBS = -lncurses -ldl
 
 ############################
 # lxdialog
@@ -179,6 +206,11 @@ $(MCONF_OBJFILES): %.o: %.c
 	@echo '[$<]'
 	$(CC) $(MCONF_INCLUDES) $(MCONF_DEFINES) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o $@ $<
 
+# compile "nconf 'c'" files
+$(NCONF_OBJFILES): %.o: %.c
+	@echo '[$<]'
+	$(CC) $(NCONF_INCLUDES) $(NCONF_DEFINES) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o $@ $<
+
 # compile "lxdialog 'c'" files
 $(LXDIALOG_OBJFILES): %.o: %.c
 	@echo '[$<]'
@@ -207,6 +239,12 @@ $(MCONF_ELF): $(COMMON_OBJFILES) $(LXDIALOG_OBJFILES) $(MCONF_OBJFILES)
 	$(CC) $(COMMON_OBJFILES) $(MCONF_OBJFILES) $(LXDIALOG_OBJFILES) $(MCONF_LIBS) -o $(MCONF_ELF) 
 	@echo
 
+# link .nconf
+$(NCONF_ELF): $(COMMON_OBJFILES) $(NCONF_OBJFILES)
+	@echo 'Linking $(NCONF_ELF)'
+	$(CC) $(COMMON_OBJFILES) $(NCONF_OBJFILES) $(NCONF_LIBS) -o $(NCONF_ELF) 
+	@echo
+
 # link .qconf
 $(QCONF_ELF): $(COMMON_OBJFILES) $(QCONF_OBJFILES) $(QCONF_CXXOBJFILES)
 	@echo 'Linking $(QCONF_ELF)'
@@ -225,6 +263,10 @@ endif
 
 ifneq ($(strip $(MCONF_DEPFILES)),)
 -include $(MCONF_DEPFILES)
+endif
+
+ifneq ($(strip $(NCONF_DEPFILES)),)
+-include $(NCONF_DEPFILES)
 endif
 
 ifneq ($(strip $(QCONF_DEPFILES)),)

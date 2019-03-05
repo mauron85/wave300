@@ -1,8 +1,6 @@
-menu "Metalink WLAN+ configuration"
-
 choice
 	prompt "Target platform"
-	default PLATFORM_UGW54_ARX388
+	default PLATFORM_UGW54_VRX288
 
 config PLATFORM_UGW61_ARX388
 	bool "UGW6.1 for ARX388"
@@ -221,7 +219,7 @@ config LINDRV_HW_PCIE
 	default y if PLATFORM_UGW54_ARX382
 	default y if PLATFORM_UGW54_GRX388
 	default y if PLATFORM_UGW54_VRX388
-	default y if PLATFORM_UGW54_VRX288
+	default n if PLATFORM_UGW54_VRX288
 	default y if PLATFORM_UGW53_GRX288_NAND
 	default y if PLATFORM_UGW53_ARX388
 	default y if PLATFORM_UGW53_VRX288
@@ -296,7 +294,7 @@ config PMCU_SUPPORT
 config LIN_MTTOOLS
 	bool "MTTools for Linux"
 	depends on COMPONENTS
-	default y if DEVELOPMENT_PLATFORM
+#	default y if DEVELOPMENT_PLATFORM
 	default n
 	---help---
 	  Build MTTools for Linux (drvhlpr, mtdump, mtlk_cli, BclSockServer).
@@ -304,7 +302,7 @@ config LIN_MTTOOLS
 config LIN_RTLOG_COMPONENTS
 	bool "RT Logger Components for Linux"
 	depends on COMPONENTS
-	default y
+	default n
 	---help---
 	  Build RT Logger Components for Linux: logserver, logdriver.
 
@@ -499,7 +497,7 @@ config TSF_TIMER_TIMESTAMPS_IN_PER_PACKET_STATS
 
 config NO_FW_RESET_ON_STOP
 	bool "Do not reset firmware on driver stop/unload"
-	default y if DEBUG
+#	default y if DEBUG
 	default n
 	---help---
 	  May be useful during firmware debugging.
@@ -680,5 +678,3 @@ config HOST_TYPE
 	default "mips-linux" if PLATFORM_GEN35FPGA
 	default "mips-linux" if PLATFORM_UGW61_ARX388
 	default "mips-linux" if PLATFORM_UGW61_VRX388
-endmenu
-

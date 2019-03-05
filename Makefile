@@ -71,7 +71,7 @@ vcxproj:
 	@perl $(WBLD_DIR)/mtlk_list_files.pl . mtlk_list_files.cfg $(WBLD_DIR)/msvc_all.vcxproj.cfg.template $(WBLD_DIR)/msvc_all.vcxproj.cfg_list.template > $(VCXPROJ_FILTERS_FNAME) < $(WBLD_DIR)/msvc_all.vcxproj.filters.template
 	@echo "Done ($(VCXPROJ_FNAME))!"
 
-.PHONY: .build_conf .build_mconf .build_qconf .config_x .config_m .config_c .config_d config xconfig menuconfig defconfig
+.PHONY: .build_conf .build_mconf .build_nconf .build_qconf .config_x .config_m .config_c .config_d config xconfig menuconfig nconfig defconfig
 
 configure: configure.ac branch_version.m4
 	autoreconf --install
@@ -88,6 +88,7 @@ branch_version.m4: branch_version.m4.in mtlk_version
 config: .build_conf .config_c .config.h
 xconfig: .build_qconf .config_x .config.h
 menuconfig: .build_mconf .config_m .config.h
+nconfig: .build_nconf .config_n .config.h
 defconfig: .build_conf .config_d .config.h
 
 BUILD_TREE_DEPS:=$(shell [ -f .config ] && ./support/cfghlpr.sh .config get_bld_tree_cfg)
@@ -107,6 +108,9 @@ BUILD_TREE_DEPS:=$(shell [ -f .config ] && ./support/cfghlpr.sh .config get_bld_
 .build_mconf:
 	@make -C tools/kconfig menuconfig
 
+.build_nconf:
+	@make -C tools/kconfig nconfig
+
 ifneq ( $(BUILD_TREE_DEPS), )
 
 $(BUILD_TREE_DEPS):
@@ -124,6 +128,10 @@ endif
 
 .config_m:
 	./tools/kconfig/mconf ./MTLKConfig
+	test .config.h -nt .config || rm -f .config.h
+
+.config_n:
+	./tools/kconfig/nconf ./MTLKConfig
 	test .config.h -nt .config || rm -f .config.h
 
 ifeq ($(MINICONFIG),)
