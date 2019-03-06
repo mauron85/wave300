@@ -38,9 +38,10 @@ pmatch(char *pattern, char *string)
           c = *p;
           if (c != '?' && c != '*' && c != '[') {
             while (*q != c) {
-	      if (*q == '\0')
-	        return FALSE;
-	        q++;
+              if (*q == '\0')
+                return FALSE;
+
+              q++;
 	    }
           }
           do {
