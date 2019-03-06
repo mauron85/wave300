@@ -127,7 +127,8 @@ mtlk_bitrate_rates_to_idx(int int_rate,
      * Resulting index should fall into rate_set.
      * If failed - forced_rate should be NO_RATE.
      */
-    for (i = BITRATE_FIRST; i <= BITRATE_LAST; i++)
+//pc2005 for cycle BUG? there was no {} block, only for first "if"
+    for (i = BITRATE_FIRST; i <= BITRATE_LAST; i++) {
       if(i == BITRATE_LAST)
       {
         short_cyclic_prefix |= short_cyclic_prefix_rate31;
@@ -138,6 +139,7 @@ mtlk_bitrate_rates_to_idx(int int_rate,
         *index = i;
         return MTLK_ERR_OK;
       }
+     }
   }
 
   return MTLK_ERR_PARAMS;
