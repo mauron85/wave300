@@ -55,6 +55,7 @@ typedef struct _mtlk_aocs_channels_stat_t {
   BOOL   DrIf;
   uint32 FwIf;
   int8   fl_noise_metric;
+  int8   noise_current;
   /* affected by 40MHz intolerance */
   BOOL   forty_mhz_int_affected;
   BOOL   forty_mhz_intolerant;
@@ -154,6 +155,7 @@ typedef struct {
   uint8  sm;
   uint8  is_noisy;
   int8   floor_noise_metric;
+  int8   noise_current;
   uint32 bt_acs_excl_reason;
 } __MTLK_IDATA mtlk_aocs_table_stat_entry_t;
 

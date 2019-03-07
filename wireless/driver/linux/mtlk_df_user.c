@@ -4903,10 +4903,10 @@ static int mtlk_df_ui_aocs_table(mtlk_seq_entry_t *s, void *data)
 
   mtlk_aux_seq_printf(s,"AOCS table:\n"
                         " Ch (2nd) SRnk CRnk BSSinR  CL      Tx SM Rad NOc"
-                        "     ClrChk !use Excl Noisy Rdr TxPenalty  Tx11d Fl.noise BT_excl\n");
+                        "     ClrChk !use Excl Noisy Rdr TxPenalty  Tx11d MaxNoise CurNoise BT_excl\n");
 
   while(NULL != (stat_entry = mtlk_clpb_enum_get_next(clpb, NULL))) {
-    mtlk_aux_seq_printf(s,"%3d (%3d) %4d %4d %6d %3d %3d.%03d %2d %3d %3d %10u %4d %4d %5d %3d  %3d.%03d  %d.%03d %8d %7d\n",
+    mtlk_aux_seq_printf(s,"%3d (%3d) %4d %4d %6d %3d %3d.%03d %2d %3d %3d %10u %4d %4d %5d %3d  %3d.%03d  %d.%03d %8d %8d %7d\n",
       stat_entry->channel_primary,
       stat_entry->channel_secondary,
       stat_entry->scan_rank,
@@ -4928,6 +4928,7 @@ static int mtlk_df_ui_aocs_table(mtlk_seq_entry_t *s, void *data)
       stat_entry->max_tx_power / 8,
       (stat_entry->max_tx_power % 8) * 125,
       stat_entry->floor_noise_metric,
+      stat_entry->noise_current,
       stat_entry->bt_acs_excl_reason);
   }
 

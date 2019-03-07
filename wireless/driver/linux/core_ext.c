@@ -5201,6 +5201,7 @@ _mtlk_core_set_channel (mtlk_core_t *core, uint16 channel, uint8 spectrum_mode, 
     param.spectrum_mode = spectrum_mode;
     param.frequency_band = userCfg ? mtlk_core_get_freq_band_cfg(core) : mtlk_core_get_freq_band_cur(core);
     param.disable_sm_channels = mtlk_eeprom_get_disable_sm_channels(mtlk_core_get_eeprom(core));
+    param.net_mode = userCfg ? mtlk_core_get_network_mode_cfg(core) : mtlk_core_get_network_mode_cur(core);
 
     if (param.bonding == (uint8)ALTERNATE_NONE){
       /* Force 20MHz in case of 40 MHz, but coexistence allows only 20MHz */

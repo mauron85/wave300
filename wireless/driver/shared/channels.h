@@ -88,6 +88,7 @@ typedef struct _mtlk_get_channel_data_t {
   uint16 channel;
   uint8 frequency_band;
   BOOL disable_sm_channels;
+  uint8 net_mode;
 } mtlk_get_channel_data_t;
 
 typedef struct {
