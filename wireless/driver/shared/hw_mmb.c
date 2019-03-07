@@ -1131,8 +1131,8 @@ get_firmware_version (mtlk_hw_t       *hw,
   static const char MAC_VERSION_SIGNATURE[] = "@@@ VERSION INFO @@@";
   const char *border = data + size;
   char *text = hw->if_version;
-  char *print_position;
-  int res, bytes_printed, len;
+  char *print_position = NULL;
+  int res, bytes_printed = 0, len;
   int bytes_left = STRING_IF_VERSIONS_SIZE;
   mtlk_vap_handle_t master_vap_handle;
 
