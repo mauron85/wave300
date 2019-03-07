@@ -3047,12 +3047,15 @@ _mtlk_mbss_preactivate (struct nic *nic, BOOL rescan_exempted)
   _core_set_preactivation_mibs(nic);
 
   /* Set Debug TPC value */
-  _mtlk_core_send_current_debug_tpc(nic);
+  result = _mtlk_core_send_current_debug_tpc(nic);
+pr_info("_mtlk_core_send_current_debug_tpc %i\n",result);  
 
   /* Set LNA */
-  _mtlk_core_send_lna_gains_on_preactivate(nic);
+  result = _mtlk_core_send_lna_gains_on_preactivate(nic);
+pr_info("_mtlk_core_send_lna_gains_on_preactivate %i\n",result);  
 
   result = _mtlk_mbss_send_preactivate_req(nic);
+pr_info("_mtlk_mbss_send_preactivate_req %i\n",result);  
   if (result != MTLK_ERR_OK) {
     goto FINISH;
   }
@@ -3060,12 +3063,23 @@ _mtlk_mbss_preactivate (struct nic *nic, BOOL rescan_exempted)
   /* send UM_MAN_CHANGE_TX_POWER_LIMIT_REQ after channel selection,
    * "MIB_TPC_ANT_" configuration, issue WAVE300_SW-2705 */
   /* send TX power limit to FW */
-  (void)mtlk_set_power_limit(nic);
-  (void)mtlk_core_set_ra_protection(nic);
-  (void)mtlk_core_set_force_ncb(nic);
-  (void)mtlk_core_set_n_rate_bo(nic);
-  (void)_mtlk_core_send_current_rx_high_threshold(nic);
-  (void)_mtlk_core_send_current_cca_threshold(nic);
+  result = mtlk_set_power_limit(nic);
+pr_info("mtlk_set_power_limit %i\n",result);  
+  result = mtlk_core_set_ra_protection(nic);
+pr_info("mtlk_core_set_ra_protection %i\n",result);  
+
+//TODO returns error??
+  result = mtlk_core_set_force_ncb(nic);
+pr_info("mtlk_core_set_force_ncb %i\n",result);  
+  result = mtlk_core_set_n_rate_bo(nic);
+pr_info("mtlk_core_set_n_rate_bo %i\n",result);  
+
+//TODO pc2005, these new will crash the system !!!! (03.04.02.00.25 was OK without it)
+//probably needs newer interface version
+//  result = _mtlk_core_send_current_rx_high_threshold(nic);
+//pr_info("_mtlk_core_send_current_rx_high_threshold %i\n",result);  
+//  result = _mtlk_core_send_current_cca_threshold(nic);
+//pr_info("_mtlk_core_send_current_cca_threshold %i\n",result);  
 
   mtlk_core_abilities_disable_11b_abilities(nic->vap_handle);
 
@@ -6621,6 +6635,7 @@ mtlk_core_set_force_ncb (mtlk_core_t *core)
     goto FINISH;
   }
 
+//NOTICE 2 == UMI_BAD_PARAMETER
   if (pForceNcb->Status != UMI_OK) {
     ELOG_DD("CID-%04x: Error returned for UMI_FORCE_NCB request to MAC (err=%d)", mtlk_vap_get_oid(core->vap_handle), pForceNcb->Status);
     result = MTLK_ERR_UMI;
