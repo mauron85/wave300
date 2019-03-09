@@ -29,8 +29,10 @@ MCONF_ELF = $(MCONF_BIN_DIR)/mconf
 NCONF_ELF = $(NCONF_BIN_DIR)/nconf
 QCONF_ELF = $(QCONF_BIN_DIR)/qconf
 
-zconf.tab.c: zconf.y
+zconf.tab.c: zconf.y zconf.lex.c
 	@bison -ozconf.tab.c -t -l zconf.y
+
+zconf.lex.c: zconf.l
 	@flex -ozconf.lex.c -L zconf.l
 
 #########################
