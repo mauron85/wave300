@@ -18,6 +18,14 @@
 #define PRINTD		0x0001
 #define DEBUG_PARSE	0x0002
 
+#define yyparse         zconfparse
+#define yylex           zconflex
+#define yyerror         zconferror
+#define yydebug         zconfdebug
+#define yynerrs         zconfnerrs
+#define yylval          zconflval
+#define yychar          zconfchar
+
 int cdebug = PRINTD;
 
 extern int zconflex(void);
