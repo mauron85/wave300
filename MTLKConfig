@@ -498,7 +498,7 @@ config TSF_TIMER_TIMESTAMPS_IN_PER_PACKET_STATS
 config NO_FW_RESET_ON_STOP
 	bool "Do not reset firmware on driver stop/unload"
 #	default y if DEBUG
-	default n
+	default y
 	---help---
 	  May be useful during firmware debugging.
 	
