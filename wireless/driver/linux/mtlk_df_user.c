@@ -7951,6 +7951,8 @@ mtlk_df_ui_linux_ioctl_setencext (struct net_device *dev,
   ILOG2_D("alg: type (%u)", ext->alg);
   MTLK_CFG_SET_ITEM(&encext_cfg, alg_type, ext->alg);
 
+pr_info("alg: %u\n", ext->alg);
+
   /* Determine and validate the key index */
   key_idx = (encoding->flags & IW_ENCODE_INDEX);
   if (ext->alg == IW_ENCODE_ALG_NONE) {
