@@ -60,6 +60,10 @@ clean:
 
 endif
 
+distclean:
+	-rm -rf .build_tree_ts .config .config.h Makefile.in config.guess config.h.in config.sub configure depcomp install-sh missing compile branch_version.m4 builds autom4te.cache
+	@make -C tools/kconfig clean
+
 vcproj:
 	@echo "Building VCPROJ ($(VCPROJ_FNAME))..."
 	@perl $(WBLD_DIR)/mtlk_list_files.pl . mtlk_list_files.cfg $(WBLD_DIR)/msvc_all.vcproj.cfg.template NO_FILTERS > $(VCPROJ_FNAME) < $(WBLD_DIR)/msvc_all.vcproj.template

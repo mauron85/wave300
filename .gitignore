@@ -9,3 +9,12 @@ configure
 .config.h
 *.d
 .deps
+.build_tree_ts
+config.guess
+config.h.in
+config.sub
+depcomp
+install-sh
+missing
+compile
+branch_version.m4

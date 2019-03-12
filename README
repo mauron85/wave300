@@ -71,12 +71,13 @@ Obtain wave300_rflib sources from the external repo and copy them into the drive
 
 Set your compiled openwrt root in the file support/ugw.env.common, variable DEFAULT_TOOLCHAIN_PATH. The driver requires libnl-3 library.
 
-First time run or .am changes:
+The ./Makefile in the root is a special file. It starts the build (not the ./configure).
 
-# aclocal
-# automake --add-missing
+Do NOT run ./configure. It will delete ./Makefile, mess the build system and you will lose Kconfig support.
 
-Do NOT run ./configure or autoconf. It will break ./Makefile and you will lose Kconfig support.
+Some combinations of missing files may be undefined. You can delete all build-oriented files by:
+
+# make distclean
 
 The default options should create the working driver. Other options may cause kernel crashes or gcc refuses to compile them (patches are welcome):
 
