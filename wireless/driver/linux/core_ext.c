@@ -7544,7 +7544,7 @@ _core_on_fast_rcvry_configure (mtlk_core_t *core)
   }
 
 //TODO failing functions
-
+#if 0 
   res = _mtlk_core_send_current_rx_high_threshold(core);
   if (res != MTLK_ERR_OK) {
     goto FINISH;
@@ -7554,6 +7554,7 @@ _core_on_fast_rcvry_configure (mtlk_core_t *core)
   if (res != MTLK_ERR_OK) {
     goto FINISH;
   }
+#endif 
 
   res = _mtlk_core_set_interfdet_do_params(core);
   if (res != MTLK_ERR_OK) {
